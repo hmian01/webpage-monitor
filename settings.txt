@@ -2,6 +2,8 @@
 
 # lines without an equal sign delimeter will be ignored
 
+
+url = https://google.com
 headless = false
 proxy = false
 delay = 10000

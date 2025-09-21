@@ -1,5 +1,9 @@
 import sys
 import time
+
+from bs4 import BeautifulSoup
+import hashlib
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -8,7 +12,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 
 settings = {}
-
 
 def load_settings():
     """
@@ -25,6 +28,29 @@ def load_settings():
     headless = settings.get('headless', 'false').lower().startswith('t')
     use_proxy = settings.get('proxy', 'false').lower().startswith('t')
     delay = int(settings.get('delay', '10000')) # in ms
+
+
+def get_output(driver):
+    """
+    collects the webpage html, raw text, and screenshot to populate the output folder
+    """
+    html = driver.page_source
+
+    with open("output/output.html","w",encoding="utf-8") as out:
+        out.write(html)
+
+    soup = BeautifulSoup(html, "html.parser")
+    rawtext = soup.get_text(separator="\n", strip=True)
+    with open("output/rawtext.txt", "w", encoding="utf-8") as f:
+        f.write(rawtext)
+
+    driver.save_screenshot("output/screenshot.png")
+
+    return rawtext
+
+
+def get_page_hash(text):
+    return hashlib.md5(text.encode("utf-8")).hexdigest()
 
 
 
@@ -45,13 +71,13 @@ def main():
 
     driver = webdriver.Chrome(options=chrome_options)
 
-
     driver.get(url)
-    with open("output.html","w",encoding="utf-8") as out:
-        out.write(driver.page_source)
-    driver.save_screenshot("screenshot.png")
 
-    time.sleep(10)
+    rawtext = get_output(driver)
+
+    newhash = get_page_hash(rawtext)
+
+    print(f"New Hash: {newhash}")
 
 
 

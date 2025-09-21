@@ -5,7 +5,7 @@
 
 ## Getting Started:
 
-### Before running the script, make sure the following are installed and set up:
+#### Before running the script, make sure the following are installed and set up:
 
 ### - Python
 `

@@ -1,0 +1,7 @@
+# settings.txt 
+
+# lines without an equal sign delimeter will be ignored
+
+headless = false
+proxy = false
+delay = 10000
